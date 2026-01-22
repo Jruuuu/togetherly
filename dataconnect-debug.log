@@ -1,0 +1,13 @@
+I0121 23:02:09.310602   87549 load.go:31] Reloading schema and connectors...
+E0121 23:02:09.311644   87549 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service "childcareapp". No service has a schema.
+E0121 23:02:09.311652   87549 load.go:73] Could not load sources: 
+Errors: schema/schema.gql:26:29: Undefined directive hasMany.
+I0121 23:02:09.312164   87549 collector.go:107] schema extensions wrote into "/Users/enrilougalde/projects/togetherly/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] 
+I0121 23:02:09.312178   87549 load.go:74] Finished reloading
+I0121 23:02:09.312274   87549 dev.go:105] Listening on address (HTTP + gRPC): 127.0.0.1:9401
+I0121 23:02:09.312349   87549 dev.go:105] Listening on address (HTTP + gRPC): [::1]:9401
+I0121 23:02:11.609682   87549 control.go:94] [/emulator/childcareapp b910] UpdateResources(): done
+Main schema: sources: 
+I0121 23:02:11.615953   87549 service.go:152] [/emulator/childcareapp b910] while configuring to server.Settings{ConnectionString:"dbname='fdcdb' host='127.0.0.1' port='5432' sslmode='disable' dbname='fdcdb'", MaxOpenConnection:1, UseDummy:false, EnableGoogleMLIntegration:false, SchemaValidationMode:""}, failed to reload latest sources: 
+Errors: schema/schema.gql:26:29: Undefined directive hasMany.
