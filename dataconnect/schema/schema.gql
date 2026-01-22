@@ -1,0 +1,82 @@
+# Enums
+enum DateNightStatus {
+  open
+  filled
+  cancelled
+}
+
+enum VolunteerStatus {
+  pending
+  approved
+  rejected
+}
+
+enum RecurringFrequency {
+  daily
+  weekly
+  monthly
+}
+
+# Couple (users)
+type Couple @table {
+  email: String! @unique
+  name: String!
+  phone: String
+  createdAt: Timestamp!
+  dateNights: [DateNight!] @hasMany
+  invitationLinks: [InvitationLink!] @hasMany
+}
+
+# Date Night
+type DateNight @table {
+  coupleId: ID!
+  couple: Couple! @hasOne(fields: ["coupleId"])
+  date: Date!
+  startTime: String!
+  endTime: String!
+  numberOfChildren: Int!
+  ages: [Int!]!
+  location: String!
+  notes: String
+  schedule: String
+  isRecurring: Boolean!
+  recurringPattern: String # JSON: {frequency, interval, endDate?, exceptions?}
+  status: DateNightStatus!
+  minNoticeHours: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  volunteerSignups: [VolunteerSignup!] @hasMany
+}
+
+# Volunteer
+type Volunteer @table {
+  name: String!
+  email: String!
+  phone: String!
+  invitationLinkId: String!
+  createdAt: Timestamp!
+  signups: [VolunteerSignup!] @hasMany
+}
+
+# Volunteer Signup (junction table for DateNight-Volunteer relationship)
+type VolunteerSignup @table {
+  dateNightId: ID!
+  dateNight: DateNight! @hasOne(fields: ["dateNightId"])
+  volunteerId: ID!
+  volunteer: Volunteer! @hasOne(fields: ["volunteerId"])
+  status: VolunteerStatus!
+  rejectionReason: String
+  signedUpAt: Timestamp!
+  approvedAt: Timestamp
+  isBackup: Boolean!
+}
+
+# Invitation Link
+type InvitationLink @table {
+  coupleId: ID!
+  couple: Couple! @hasOne(fields: ["coupleId"])
+  linkId: String! @unique
+  expiresAt: Timestamp!
+  accessLog: String! # JSON array: [{timestamp, volunteerId?, ipAddress?}]
+  createdAt: Timestamp!
+}

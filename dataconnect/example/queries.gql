@@ -1,0 +1,25 @@
+mutation CreateCouple($name: String!) @auth(level: USER) {
+  couple_insert(data: {name: $name, createdAt_expr: "request.time"})
+}
+
+query ListMilestones($coupleId: UUID!) @auth(level: USER) {
+  milestones(where: {coupleId: {eq: $coupleId}}) {
+    id
+    title
+    date
+    description
+  }
+}
+
+mutation UpdateGoalStatus($id: UUID!, $status: String!) @auth(level: USER) {
+  goal_update(id: $id, data: {status: $status, updatedAt_expr: "request.time"})
+}
+
+query ListJournalEntriesForCouple($coupleId: UUID!) @auth(level: USER) {
+  journalEntries(where: {coupleId: {eq: $coupleId}}) {
+    id
+    title
+    entryDate
+    content
+  }
+}

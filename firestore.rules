@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Couples can read/write their own data
+    match /couples/{coupleId} {
+      // Allow read if authenticated and it's their own record
+      allow read: if request.auth != null && (
+        request.auth.uid == coupleId || 
+        resource.data.email == request.auth.token.email
+      );
+      
+      // Allow create if authenticated and email matches
+      allow create: if request.auth != null && 
+        request.resource.data.email == request.auth.token.email;
+      
+      // Allow update/delete if it's their own record
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == coupleId ||
+        resource.data.email == request.auth.token.email
+      );
+    }
+    
+    // Date nights - couples can manage their own
+    match /dateNights/{dateNightId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+        (resource.data.coupleId == request.auth.uid ||
+         request.resource.data.coupleId == request.auth.uid);
+    }
+    
+    // Volunteers - read only for couples, write for signup
+    match /volunteers/{volunteerId} {
+      allow read: if request.auth != null;
+      allow create: if true; // Anyone can create (via invitation link)
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Invitation links - couples can manage their own
+    match /invitationLinks/{linkId} {
+      allow read: if true; // Public read for link validation
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null;
+    }
+  }
+}
